@@ -1,0 +1,33 @@
+# Blockchain Indexer Configuration
+
+# Ethereum RPC Configuration
+ethereum:
+  rpc_url: "https://mainnet.infura.io/v3/YOUR_PROJECT_ID"
+  token_contract: "0x..."  # Your token contract address
+  token_abi_json: '[{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"}]'
+
+# Database Configuration
+database:
+  path: "blockchain_events.db"
+  type: "sqlite"
+
+# Kafka Configuration
+kafka:
+  url: "localhost:9092"
+  topic: "real-estate-transfers"
+
+# Indexing Configuration
+indexing:
+  batch_size: 1000
+  rate_limit_ms: 100
+  start_block: 0  # 0 means start from genesis, or specify a block number
+
+# HTTP Server Configuration
+server:
+  port: 8080
+  host: "0.0.0.0"
+
+# Logging Configuration
+logging:
+  level: "info"  # debug, info, warn, error
+  format: "text"  # text, json 

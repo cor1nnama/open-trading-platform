@@ -1,0 +1,17 @@
+# Blockchain Listener Configuration
+
+# Ethereum RPC Configuration
+ethereum:
+  rpc_url: "https://mainnet.infura.io/v3/YOUR_PROJECT_ID"
+  token_contract: "0x..."  # Your token contract address
+  token_abi_json: '[{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"}]'
+
+# Kafka Configuration
+kafka:
+  url: "localhost:9092"
+  topic: "real-estate-transfers"
+
+# Logging Configuration
+logging:
+  level: "info"  # debug, info, warn, error
+  format: "text"  # text, json 
