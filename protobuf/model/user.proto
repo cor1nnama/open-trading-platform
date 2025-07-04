@@ -1,0 +1,116 @@
+syntax = "proto3";
+import "modelcommon.proto";
+
+package model;
+option go_package="model";
+
+message User {
+    string id = 1;                    // Unique user identifier
+    string email = 2;                 // User's email address
+    string username = 3;              // Username for login
+    UserStatus status = 4;            // Active, suspended, verified, etc.
+    Timestamp created_at = 5;         // When account was created
+    Timestamp last_login = 6;         // Last login timestamp
+    
+    // Personal information
+    PersonalInfo personal_info = 7;
+    
+    // Compliance and verification
+    ComplianceInfo compliance_info = 8;
+    
+    // Trading permissions and limits
+    TradingPermissions trading_permissions = 9;
+    
+    // Account balances and limits
+    AccountInfo account_info = 10;
+    
+    // Preferences and settings
+    UserPreferences preferences = 11;
+}
+
+message PersonalInfo {
+    string first_name = 1;
+    string last_name = 2;
+    string phone_number = 3;
+    string date_of_birth = 4;         // YYYY-MM-DD format
+    string nationality = 5;
+    string tax_id = 6;                // SSN, EIN, or other tax ID
+    Address address = 7;
+    string occupation = 8;
+    double annual_income = 9;         // Annual income for suitability
+    double net_worth = 10;            // Net worth for suitability
+}
+
+message Address {
+    string street_address = 1;
+    string city = 2;
+    string state = 3;
+    string country = 4;
+    string zip_code = 5;
+}
+
+message ComplianceInfo {
+    KYCStatus kyc_status = 1;         // Know Your Customer status
+    string kyc_verification_date = 2; // When KYC was completed
+    string kyc_document_type = 3;     // Driver's license, passport, etc.
+    string kyc_document_number = 4;   // Document number
+    bool accredited_investor = 5;      // Accredited investor status
+    string accreditation_date = 6;    // When accredited status was verified
+    repeated string compliance_documents = 7; // Links to compliance docs
+    string regulatory_jurisdiction = 8; // Primary regulatory jurisdiction
+    bool ofac_cleared = 9;            // OFAC sanctions check
+    string risk_level = 10;           // Low, medium, high risk
+}
+
+message TradingPermissions {
+    bool can_trade = 1;               // General trading permission
+    bool can_short_sell = 2;          // Short selling permission
+    bool can_margin_trade = 3;        // Margin trading permission
+    double max_position_size = 4;     // Maximum position size
+    double max_daily_trading = 5;     // Maximum daily trading volume
+    repeated string allowed_tokens = 6; // Specific tokens user can trade
+    repeated string restricted_tokens = 7; // Tokens user cannot trade
+    string trading_level = 8;         // Basic, intermediate, advanced
+    bool paper_trading_only = 9;      // Restrict to paper trading
+}
+
+message AccountInfo {
+    double total_balance = 1;         // Total account balance
+    double available_balance = 2;     // Available for trading
+    double margin_balance = 3;        // Margin account balance
+    double used_margin = 4;           // Currently used margin
+    double max_margin = 5;            // Maximum margin allowed
+    string primary_currency = 6;      // USD, EUR, etc.
+    repeated string linked_bank_accounts = 7; // Bank account references
+    bool margin_call = 8;             // Currently under margin call
+    Timestamp last_balance_update = 9;
+}
+
+message UserPreferences {
+    string language = 1;              // Preferred language
+    string timezone = 2;              // User's timezone
+    string notification_preferences = 3; // Email, SMS, push notifications
+    bool two_factor_enabled = 4;      // 2FA enabled
+    string default_order_type = 5;    // Market, limit, stop
+    double default_order_size = 6;    // Default quantity for orders
+    bool auto_reinvest = 7;           // Auto-reinvest dividends
+    string risk_tolerance = 8;        // Conservative, moderate, aggressive
+}
+
+enum UserStatus {
+    PENDING_VERIFICATION = 0;         // Account created, pending verification
+    ACTIVE = 1;                       // Fully active account
+    SUSPENDED = 2;                    // Temporarily suspended
+    RESTRICTED = 3;                   // Trading restricted
+    CLOSED = 4;                       // Account closed
+    KYC_PENDING = 5;                  // KYC verification pending
+    KYC_REJECTED = 6;                 // KYC verification failed
+}
+
+enum KYCStatus {
+    NOT_STARTED = 0;                  // KYC not initiated
+    PENDING = 1;                      // KYC submitted, pending review
+    VERIFIED = 2;                     // KYC verified
+    REJECTED = 3;                     // KYC rejected
+    EXPIRED = 4;                      // KYC expired, needs renewal
+}

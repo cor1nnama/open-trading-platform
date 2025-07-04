@@ -1,0 +1,19 @@
+syntax = "proto3";
+import "modelcommon.proto";
+
+package model;
+option go_package="model";
+
+message Trade {
+    string id = 1;              // Unique trade ID
+    string buy_order_id = 2;    // Reference to the buy order
+    string sell_order_id = 3;   // Reference to the sell order
+    string token_id = 4;        // Token/property traded
+    double price = 5;           // Execution price
+    int32 quantity = 6;         // Number of tokens traded
+    int64 timestamp = 7;        // When the trade occurred
+    string buyer_id = 8;        // User who bought
+    string seller_id = 9;       // User who sold
+    double fee = 10;            // (Optional) Trading fee
+    string settlement_status = 11; // (Optional) Settlement status
+}

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package model;
 
-import "instrument.proto";
+import "token.proto";
 import "market.proto";
 import "modelcommon.proto";
 
@@ -12,18 +12,20 @@ option go_package="model";
 for example MSFT can be traded on both Nasdaq IEX, thus there would be at least
 two listings for MSFT, one for each exchange */
 message Listing {
-    int32 version = 1;
-    int32 id = 2;
+    int32 id = 1;
+    Token token = 2;
     Market market = 3;
-    Instrument instrument = 4;
-    string marketSymbol = 5;
-    TickSizeTable tickSize = 6;
-    Decimal64 sizeIncrement = 7;
+    string listing_symbol = 4;
+    TickSizeTable tickSize = 5;
+    Decimal64 sizeIncrement = 6;
+    ListingStatus status = 7; //Optional
+    Timestamp created_at = 8; //Optional 
+    Timestamp updated_at = 9; //Optional 
 }
 
 message TickSizeTable {
     repeated TickSizeEntry entries=1;
-		
+    
 }
 
 message TickSizeEntry {
@@ -32,3 +34,8 @@ message TickSizeEntry {
     Decimal64 tickSize=3;
 }
 
+enum ListingStatus {
+    ACTIVE = 0;
+    SUSPENDED = 1;
+    DELISTED = 2;
+}

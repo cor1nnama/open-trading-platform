@@ -1,0 +1,19 @@
+syntax = "proto3";
+import "modelcommon.proto";
+
+package model;
+option go_package="model";
+
+message Token {
+    string id = 1;                    // Unique token identifier
+    string property_id = 2;           // Reference to the property
+    string symbol = 3;                // Trading symbol (e.g., "PROP123")
+    double total_supply = 4;          // Total number of tokens issued
+    double current_price = 5;         // Current market price per token
+    TokenStatus status = 6;           // Active, suspended, delisted, etc.
+    Timestamp created_at = 7;         // When token was created
+    Timestamp last_updated = 8;       // Last price update
+    
+    // Token-specific metadata
+    TokenMetadata metadata = 9;
+}

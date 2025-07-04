@@ -1,0 +1,97 @@
+syntax = "proto3";
+import "modelcommon.proto";
+
+package model;
+option go_package="model";
+
+message Property {
+    string id = 1;                    // Unique property identifier
+    string name = 2;                  // Property name (e.g., "123 Main Street")
+    string address = 3;               // Full address
+    PropertyType type = 4;            // Residential, commercial, etc.
+    PropertyStatus status = 5;        // Active, sold, under renovation, etc.
+    
+    // Physical characteristics
+    PhysicalDetails physical_details = 6;
+    
+    // Financial information
+    FinancialDetails financial_details = 7;
+    
+    // Legal and ownership
+    LegalDetails legal_details = 8;
+    
+    // Market and valuation
+    MarketDetails market_details = 9;
+    
+    // Timestamps
+    Timestamp created_at = 10;
+    Timestamp last_updated = 11;
+}
+
+message PhysicalDetails {
+    double square_feet = 1;           // Total square footage
+    double lot_size = 2;              // Lot size in square feet
+    int32 bedrooms = 3;               // Number of bedrooms
+    int32 bathrooms = 4;              // Number of bathrooms
+    int32 floors = 5;                 // Number of floors
+    int32 year_built = 6;             // Year property was built
+    string construction_type = 7;     // Wood, concrete, steel, etc.
+    string condition = 8;             // Excellent, good, fair, poor
+    repeated string amenities = 9;    // Pool, garage, fireplace, etc.
+    string zoning = 10;               // Zoning classification
+}
+
+message FinancialDetails {
+    double appraised_value = 1;       // Current appraised value
+    string currency = 2;              // Currency of value
+    double annual_rent = 3;           // Annual rental income
+    double annual_expenses = 4;       // Annual operating expenses
+    double net_operating_income = 5;  // NOI (calculated)
+    double cap_rate = 6;              // Capitalization rate
+    double price_per_sqft = 7;        // Price per square foot
+    double rent_per_sqft = 8;         // Rent per square foot
+    double vacancy_rate = 9;          // Current vacancy rate
+    Timestamp appraisal_date = 10;    // When appraisal was done
+}
+
+message LegalDetails {
+    string legal_entity = 1;          // Legal entity that owns the property
+    string entity_type = 2;           // LLC, Trust, Corporation, etc.
+    string jurisdiction = 3;          // State/country of legal entity
+    string tax_id = 4;                // EIN or tax identification
+    repeated string liens = 5;        // Any liens on the property
+    string title_status = 6;          // Clear title, encumbered, etc.
+    repeated string permits = 7;      // Building permits, licenses
+    string insurance_policy = 8;      // Insurance policy number
+    double insurance_coverage = 9;    // Insurance coverage amount
+}
+
+message MarketDetails {
+    string market_area = 1;           // Market/neighborhood
+    string school_district = 2;       // School district
+    double market_cap_rate = 3;       // Average cap rate in area
+    double market_price_per_sqft = 4; // Average price per sqft in area
+    string market_trend = 5;          // Rising, stable, declining
+    double days_on_market = 6;        // Average days on market
+    repeated string comparable_properties = 7; // Similar properties
+}
+
+enum PropertyType {
+    RESIDENTIAL_SINGLE_FAMILY = 0;
+    RESIDENTIAL_MULTI_FAMILY = 1;
+    COMMERCIAL_OFFICE = 2;
+    COMMERCIAL_RETAIL = 3;
+    COMMERCIAL_INDUSTRIAL = 4;
+    COMMERCIAL_HOSPITALITY = 5;
+    LAND = 6;
+    MIXED_USE = 7;
+}
+
+enum PropertyStatus {
+    ACTIVE = 0;                       // Available for tokenization
+    TOKENIZED = 1;                    // Currently tokenized
+    SOLD = 2;                         // Property sold
+    UNDER_RENOVATION = 3;             // Being renovated
+    OFF_MARKET = 4;                   // Temporarily off market
+    FORECLOSED = 5;                   // In foreclosure
+}

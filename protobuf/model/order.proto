@@ -5,50 +5,61 @@ package model;
 option go_package="model";
 
 enum Side {
-    BUY =0;
-    SELL=1;
+    BUY = 0;
+    SELL = 1;
 }
-
-
-enum OrderStatus {
-    NONE =0;
-    LIVE =1;
-    FILLED =2;
-    CANCELLED =3;
-}
-
 
 message Ref {
     int32 version = 1;
     string id = 2;
 }
 
-message Order{
-    int32 version = 1;
-    string id = 2;
-    Side side = 3;
-    Decimal64 quantity = 4;
-    Decimal64 price = 5;
-    int32 listingId = 6;
-    Decimal64 remainingQuantity=7;
-    Decimal64 tradedQuantity=8;
-    Decimal64 avgTradePrice=9;
-    OrderStatus status=10;
-    OrderStatus targetStatus=11;
-    Timestamp created=12;
-    string ownerId=13;
-    string originatorId=14;
-    string originatorRef=15;
-    Decimal64 lastExecQuantity = 16;
-    Decimal64 lastExecPrice = 17;
-    string    lastExecId = 18;
-    Decimal64 exposedQuantity=19;
-    string errorMessage=20;
-    repeated Ref childOrdersRefs = 21;
-    string rootOriginatorId=22;
-    string rootOriginatorRef=23;
-    string execParametersJson=24; 
-    string destination=25;
+message Order {
+    string id = 1;              // Unique identifier for this order
+    string user_id = 2;         // User who placed the order
+    string token_id = 3;        // Identifier for the token/property being traded
+    OrderType order_type = 4;   
+    double price = 5;           
+    int32 quantity = 6;
+    OrderStatus status = 7;
+    int64 timestamp = 8;
+
+    // New fields for short selling
+    bool is_short = 9;
+    string borrowed_from = 10;
+    double margin_required = 11;
+
+    // New fields for borrowing terms
+    BorrowingTerms borrowing_terms = 12;  
 }
 
+enum OrderType {
+    BUY = 0;
+    SELL = 1;
+    SHORT_SELL = 2;                       // New order type
+    SHORT_COVER = 3;                      // Buy to cover short position
+}
 
+enum OrderStatus {
+    PENDING = 0;
+    FILLED = 1;
+    CANCELLED = 2;
+    REJECTED = 3;
+    PARTIALLY_FILLED = 4;
+}
+
+// Short selling terms
+message BorrowingTerms {
+    BorrowingType type = 1;              
+    int64 borrow_date = 2;                // When tokens were borrowed
+    int64 due_date = 3;                   // When tokens must be returned (for fixed term)
+    double interest_rate = 4;             // Annual interest rate on borrowed tokens
+    bool recallable = 5;                  // Can lender demand early return?
+    int32 notice_period_hours = 6;        // Hours notice required for recall
+}
+
+enum BorrowingType {
+    FIXED_TERM = 0;      // Must return by specific date
+    OPEN_ENDED = 1;      // Return when you cover position
+    DEMAND = 2;          // Lender can demand return anytime
+}

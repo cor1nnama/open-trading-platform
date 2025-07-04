@@ -4,9 +4,45 @@ package model;
 option go_package="model";
 
 message Market {
-   int32 version = 1;
-   int32 id = 2;
-   string name = 3;
-   string mic = 4;
-   string countryCode = 5;
+   int32 id = 1;                // Unique market ID
+   string name = 2;             // Market name
+   MarketType type = 3;         // Type of market
+   string currency = 4;         // Trading currency (e.g., "USD")
+   string country = 5;          // Country or region
+   MarketStatus status = 6;     // Market status
+   string mic = 7;              // (Optional) Market Identifier Code
+   string description = 8;      // (Optional) Description
+   Timestamp created_at = 9;    // (Optional) Creation time
+   Timestamp updated_at = 10;   // (Optional) Last update time
+}  
+
+enum MarketType {
+   PRIMARY = 0;                 // Market for initial token issuances
+   SECONDARY = 1;               // Market for trading existing tokens
+   AUCTION = 2;                 // Market for auction-style trading
+   OTC = 3;                     // Market for private/bilateral trading
+}
+
+enum MarketStatus {
+   ACTIVE = 0;               
+   SUSPENDED = 1;   
+   CLOSED = 2;
+}
+
+// TODO: understand the following message, do matching system
+
+message OrderBook {
+  int32 token_id = 1;
+  repeated Order bids = 2;
+  repeated Order asks = 3;
+}
+
+message Order {
+  string order_id = 1;
+  string user_id = 2;
+  double price = 3;
+  double quantity = 4;
+  string side = 5; // "BID" or "ASK"
+  string status = 6;
+  int64 timestamp = 7;
 }

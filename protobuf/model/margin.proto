@@ -1,0 +1,40 @@
+syntax = "proto3";
+import "modelcommon.proto";
+
+package model;
+option go_package="model";
+
+message MarginAccount {
+    string user_id = 1;
+    double total_margin = 2;              // Total margin deposited
+    double used_margin = 3;               // Margin currently used
+    double available_margin = 4;          // Available margin
+    double maintenance_margin = 5;        // Required maintenance margin
+    bool margin_call = 6;                 // Is account under margin call?
+    Timestamp created_at = 7;             // When account was created
+    Timestamp last_updated = 8;           // When account was last updated
+}
+
+message MarginTransaction {
+    string id = 1;
+    string user_id = 2;
+    MarginTransactionType type = 3;
+    double amount = 4;
+    Timestamp timestamp = 5;
+    string description = 6;
+}
+
+enum MarginTransactionType {
+    DEPOSIT = 0;
+    WITHDRAWAL = 1;
+    MARGIN_CALL = 2;
+    INTEREST_CHARGE = 3;
+    PENALTY = 4;
+}
+
+message MarginRequirement {
+    string token_id = 1;
+    double initial_margin_rate = 2;       // Initial margin required (e.g., 50%)
+    double maintenance_margin_rate = 3;   // Maintenance margin required (e.g., 30%)
+    bool short_selling_allowed = 4;       // Can this token be short sold?
+}

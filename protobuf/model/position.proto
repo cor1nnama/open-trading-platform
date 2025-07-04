@@ -1,0 +1,25 @@
+syntax = "proto3";
+import "modelcommon.proto";
+
+package model;
+option go_package="model";
+
+message Position {
+    string user_id = 1;
+    string token_id = 2;
+    double long_quantity = 3;             // Tokens owned
+    double short_quantity = 4;            // Tokens borrowed/sold short
+    double average_long_price = 5;        // Average price of long positions
+    double average_short_price = 6;       // Average price of short positions
+    double unrealized_pnl = 7;            // Unrealized profit/loss
+    double margin_used = 8;               // Margin currently used
+    double margin_available = 9;          // Available margin
+    Timestamp last_updated = 10;          // When position was last updated
+}
+
+message PositionSummary {
+    string user_id = 1;
+    repeated Position positions = 2;      // All positions for this user
+    double total_unrealized_pnl = 3;      // Total P&L across all positions
+    double total_margin_used = 4;         // Total margin used across all positions
+}
