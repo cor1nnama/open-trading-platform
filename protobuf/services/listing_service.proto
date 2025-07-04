@@ -1,0 +1,172 @@
+syntax = "proto3";
+package services;
+
+import "model/listing.proto";
+import "model/modelcommon.proto";
+
+// ListingService manages the lifecycle and metadata of property/token listings on markets/venues.
+service ListingService {
+    // Create a new listing
+    rpc CreateListing(CreateListingRequest) returns (CreateListingResponse);
+
+    // Get details of a specific listing
+    rpc GetListing(GetListingRequest) returns (GetListingResponse);
+
+    // List all listings, with advanced filters and pagination
+    rpc ListListings(ListListingsRequest) returns (ListListingsResponse);
+
+    // Update an existing listing
+    rpc UpdateListing(UpdateListingRequest) returns (UpdateListingResponse);
+
+    // Delete (or deactivate) a listing
+    rpc DeleteListing(DeleteListingRequest) returns (DeleteListingResponse);
+
+    // Get the current status of a listing
+    rpc GetListingStatus(GetListingStatusRequest) returns (GetListingStatusResponse);
+
+    // Suspend a listing (e.g., for compliance or investigation)
+    rpc SuspendListing(SuspendListingRequest) returns (SuspendListingResponse);
+
+    // Activate a previously suspended listing
+    rpc ActivateListing(ActivateListingRequest) returns (ActivateListingResponse);
+
+    // Audit a listing (for compliance or regulatory review)
+    rpc AuditListing(AuditListingRequest) returns (AuditListingResponse);
+
+    // Subscribe to real-time listing updates (streaming)
+    rpc SubscribeListings(SubscribeListingsRequest) returns (stream model.Listing);
+    
+    // Approve a listing (e.g., after compliance review)
+    rpc ApproveListing(ApproveListingRequest) returns (ApproveListingResponse);
+
+    // Reject a listing (e.g., if it fails compliance)
+    rpc RejectListing(RejectListingRequest) returns (RejectListingResponse);
+
+    // Archive a listing (e.g., for delisted or expired listings)
+    rpc ArchiveListing(ArchiveListingRequest) returns (ArchiveListingResponse);
+}
+
+// --- Request/Response Messages ---
+
+message ApproveListingRequest {
+    string listing_id = 1;
+    string approver_id = 2; // User performing the approval
+    string notes = 3;
+}
+
+message ApproveListingResponse {
+    string status = 1;
+}
+
+message RejectListingRequest {
+    string listing_id = 1;
+    string rejector_id = 2; // User performing the rejection
+    string reason = 3;
+}
+
+message RejectListingResponse {
+    string status = 1;
+}
+
+message ArchiveListingRequest {
+    string listing_id = 1;
+    string archiver_id = 2; // User performing the archiving
+    string reason = 3;
+}
+
+message ArchiveListingResponse {
+    string status = 1;
+}
+
+message CreateListingRequest {
+    model.Listing listing = 1;
+    string requestor_id = 2; // User attempting to create the listing
+    string certificate_id = 3; // (Optional) Certificate or license number
+}
+
+message CreateListingResponse {
+    string listing_id = 1;
+    string status = 2;
+}
+
+message GetListingRequest {
+    string listing_id = 1;
+}
+
+message GetListingResponse {
+    model.Listing listing = 1;
+}
+
+message ListListingsRequest {
+    string token_id = 1;           // Optional filter
+    string market_id = 2;          // Optional filter
+    string region = 3;             // Optional filter
+    string compliance_status = 4;  // Optional filter
+    string status = 5;             // Optional filter (e.g., "ACTIVE")
+    int32 page = 6;                // For pagination
+    int32 page_size = 7;           // For pagination
+}
+
+message ListListingsResponse {
+    repeated model.Listing listings = 1;
+    int32 total_count = 2;         // For pagination
+}
+
+message UpdateListingRequest {
+    string listing_id = 1;
+    model.Listing listing = 2;
+}
+
+message UpdateListingResponse {
+    string status = 1;
+}
+
+message DeleteListingRequest {
+    string listing_id = 1;
+}
+
+message DeleteListingResponse {
+    string status = 1;
+}
+
+message GetListingStatusRequest {
+    string listing_id = 1;
+}
+
+message GetListingStatusResponse {
+    string status = 1;
+}
+
+message SuspendListingRequest {
+    string listing_id = 1;
+    string reason = 2;
+}
+
+message SuspendListingResponse {
+    string status = 1;
+}
+
+message ActivateListingRequest {
+    string listing_id = 1;
+}
+
+message ActivateListingResponse {
+    string status = 1;
+}
+
+message AuditListingRequest {
+    string listing_id = 1;
+    string auditor_id = 2;
+    string notes = 3;
+}
+
+message AuditListingResponse {
+    string status = 1;
+    string audit_report_url = 2;
+}
+
+message SubscribeListingsRequest {
+    string region = 1;             // Optional filter
+    string compliance_status = 2;  // Optional filter
+    string status = 3;             // Optional filter
+}

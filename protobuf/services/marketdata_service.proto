@@ -1,0 +1,85 @@
+syntax = "proto3";
+package services;
+
+import "model/clobquote.proto";
+import "model/trade.proto";
+import "model/modelcommon.proto";
+
+service MarketDataService {
+    // Get the current order book for a token
+    rpc GetOrderBook(GetOrderBookRequest) returns (model.ClobQuote);
+
+    // Subscribe to real-time order book updates (streaming)
+    rpc SubscribeOrderBook(SubscribeOrderBookRequest) returns (stream model.ClobQuote);
+
+    // Get recent trades for a token
+    rpc GetRecentTrades(GetRecentTradesRequest) returns (GetRecentTradesResponse);
+
+    // Subscribe to real-time trade updates (streaming)
+    rpc SubscribeTrades(SubscribeTradesRequest) returns (stream model.Trade);
+
+    // Get historical price data (candlesticks)
+    rpc GetCandles(GetCandlesRequest) returns (GetCandlesResponse);
+
+    // Get market statistics (24h volume, high, low, etc.)
+    rpc GetMarketStats(GetMarketStatsRequest) returns (GetMarketStatsResponse);
+}
+
+// --- Request/Response Messages ---
+
+message GetOrderBookRequest {
+    string token_id = 1;
+    int32 depth = 2; // Number of price levels to return
+}
+
+message SubscribeOrderBookRequest {
+    string token_id = 1;
+    int32 depth = 2;
+}
+
+message GetRecentTradesRequest {
+    string token_id = 1;
+    int32 limit = 2; // Number of trades to return
+}
+
+message GetRecentTradesResponse {
+    repeated model.Trade trades = 1;
+}
+
+message SubscribeTradesRequest {
+    string token_id = 1;
+}
+
+message GetCandlesRequest {
+    string token_id = 1;
+    string interval = 2; // "1m", "5m", "1h", "1d", etc.
+    int64 start_time = 3; // Unix timestamp
+    int64 end_time = 4;   // Unix timestamp
+}
+
+message Candle {
+    int64 timestamp = 1;
+    double open = 2;
+    double high = 3;
+    double low = 4;
+    double close = 5;
+    double volume = 6;
+}
+
+message GetCandlesResponse {
+    repeated Candle candles = 1;
+}
+
+message GetMarketStatsRequest {
+    string token_id = 1;
+}
+
+message GetMarketStatsResponse {
+    double last_price = 1;
+    double high_24h = 2;
+    double low_24h = 3;
+    double volume_24h = 4;
+    double change_24h = 5;
+    double change_percent_24h = 6;
+    int64 last_trade_time = 7;
+}

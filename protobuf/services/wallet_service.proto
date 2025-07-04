@@ -1,0 +1,100 @@
+syntax = "proto3";
+package services;
+
+import "model/account.proto";
+import "model/modelcommon.proto";
+
+// WalletService manages user balances, deposits, withdrawals, and transfers.
+service WalletService {
+    // Get a user's balance for a specific currency/token
+    rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+
+    // List all balances for a user
+    rpc ListBalances(ListBalancesRequest) returns (ListBalancesResponse);
+
+    // Deposit funds into a user's account
+    rpc Deposit(DepositRequest) returns (DepositResponse);
+
+    // Withdraw funds from a user's account
+    rpc Withdraw(WithdrawRequest) returns (WithdrawResponse);
+
+    // Transfer funds between accounts (internal transfer)
+    rpc Transfer(TransferRequest) returns (TransferResponse);
+
+    // Get transaction history for a user/account
+    rpc GetTransactionHistory(GetTransactionHistoryRequest) returns (GetTransactionHistoryResponse);
+
+    // Subscribe to real-time balance updates for a user
+    rpc SubscribeBalanceUpdates(SubscribeBalanceUpdatesRequest) returns (stream model.Balance);
+}
+
+// --- Messages ---
+
+message GetBalanceRequest {
+    string user_id = 1;
+    string currency = 2; // e.g., "USD", "USDT", "PROP123"
+}
+
+message GetBalanceResponse {
+    model.Balance balance = 1;
+}
+
+message ListBalancesRequest {
+    string user_id = 1;
+}
+
+message ListBalancesResponse {
+    repeated model.Balance balances = 1;
+}
+
+message DepositRequest {
+    string user_id = 1;
+    string currency = 2;
+    double amount = 3;
+    string method = 4; // "bank_transfer", "crypto", etc.
+}
+
+message DepositResponse {
+    string status = 1;
+    string deposit_id = 2;
+}
+
+message WithdrawRequest {
+    string user_id = 1;
+    string currency = 2;
+    double amount = 3;
+    string destination = 4; // bank account or wallet address
+}
+
+message WithdrawResponse {
+    string status = 1;
+    string withdrawal_id = 2;
+}
+
+message TransferRequest {
+    string from_user_id = 1;
+    string to_user_id = 2;
+    string currency = 3;
+    double amount = 4;
+}
+
+message TransferResponse {
+    string status = 1;
+    string transfer_id = 2;
+}
+
+message GetTransactionHistoryRequest {
+    string user_id = 1;
+    string currency = 2; // Optional filter
+    int32 page = 3;
+    int32 page_size = 4;
+}
+
+message GetTransactionHistoryResponse {
+    repeated model.Transaction transactions = 1;
+    int32 total_count = 2;
+}
+
+message SubscribeBalanceUpdatesRequest {
+    string user_id = 1;
+}

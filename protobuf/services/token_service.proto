@@ -1,0 +1,181 @@
+syntax = "proto3";
+package services;
+
+import "model/token.proto";
+import "model/modelcommon.proto";
+
+service TokenService {
+    // Create a new token
+    rpc CreateToken(CreateTokenRequest) returns (CreateTokenResponse);
+
+    // Get details of a specific token
+    rpc GetToken(GetTokenRequest) returns (GetTokenResponse);
+
+    // List all tokens, with filters and pagination
+    rpc ListTokens(ListTokensRequest) returns (ListTokensResponse);
+
+    // Update an existing token
+    rpc UpdateToken(UpdateTokenRequest) returns (UpdateTokenResponse);
+
+    // Delete (or deactivate) a token
+    rpc DeleteToken(DeleteTokenRequest) returns (DeleteTokenResponse);
+
+    // Get the current status of a token
+    rpc GetTokenStatus(GetTokenStatusRequest) returns (GetTokenStatusResponse);
+
+    // Activate a token
+    rpc ActivateToken(ActivateTokenRequest) returns (ActivateTokenResponse);
+
+    // Suspend a token
+    rpc SuspendToken(SuspendTokenRequest) returns (SuspendTokenResponse);
+
+    // Delist a token
+    rpc DelistToken(DelistTokenRequest) returns (DelistTokenResponse);
+
+    // Archive a token
+    rpc ArchiveToken(ArchiveTokenRequest) returns (ArchiveTokenResponse);
+
+    // Mint new tokens (optional)
+    rpc MintToken(MintTokenRequest) returns (MintTokenResponse);
+
+    // Burn tokens (optional)
+    rpc BurnToken(BurnTokenRequest) returns (BurnTokenResponse);
+
+    // Audit a token (for compliance or regulatory review)
+    rpc AuditToken(AuditTokenRequest) returns (AuditTokenResponse);
+
+    // Subscribe to real-time token updates (streaming)
+    rpc SubscribeTokens(SubscribeTokensRequest) returns (stream model.Token);
+}
+
+// --- Messages ---
+
+message CreateTokenRequest {
+    model.Token token = 1;
+    string requestor_id = 2;
+    string certificate_id = 3;
+}
+
+message CreateTokenResponse {
+    string token_id = 1;
+    string status = 2;
+}
+
+message GetTokenRequest {
+    string token_id = 1;
+}
+
+message GetTokenResponse {
+    model.Token token = 1;
+}
+
+message ListTokensRequest {
+    string property_id = 1;         // Optional filter
+    string status = 2;              // Optional filter
+    string region = 3;              // Optional filter
+    int32 page = 4;                 // For pagination
+    int32 page_size = 5;            // For pagination
+}
+
+message ListTokensResponse {
+    repeated model.Token tokens = 1;
+    int32 total_count = 2;
+}
+
+message UpdateTokenRequest {
+    string token_id = 1;
+    model.Token token = 2;
+    string requestor_id = 3;
+    string certificate_id = 4;
+}
+
+message UpdateTokenResponse {
+    string status = 1;
+}
+
+message DeleteTokenRequest {
+    string token_id = 1;
+}
+
+message DeleteTokenResponse {
+    string status = 1;
+}
+
+message GetTokenStatusRequest {
+    string token_id = 1;
+}
+
+message GetTokenStatusResponse {
+    string status = 1;
+}
+
+message ActivateTokenRequest {
+    string token_id = 1;
+}
+
+message ActivateTokenResponse {
+    string status = 1;
+}
+
+message SuspendTokenRequest {
+    string token_id = 1;
+    string reason = 2;
+}
+
+message SuspendTokenResponse {
+    string status = 1;
+}
+
+message DelistTokenRequest {
+    string token_id = 1;
+    string reason = 2;
+}
+
+message DelistTokenResponse {
+    string status = 1;
+}
+
+message ArchiveTokenRequest {
+    string token_id = 1;
+    string reason = 2;
+}
+
+message ArchiveTokenResponse {
+    string status = 1;
+}
+
+message MintTokenRequest {
+    string token_id = 1;
+    double amount = 2;
+    string requestor_id = 3;
+}
+
+message MintTokenResponse {
+    string status = 1;
+}
+
+message BurnTokenRequest {
+    string token_id = 1;
+    double amount = 2;
+    string requestor_id = 3;
+}
+
+message BurnTokenResponse {
+    string status = 1;
+}
+
+message AuditTokenRequest {
+    string token_id = 1;
+    string auditor_id = 2;
+    string notes = 3;
+}
+
+message AuditTokenResponse {
+    string status = 1;
+    string audit_report_url = 2;
+}
+
+message SubscribeTokensRequest {
+    string property_id = 1;         // Optional filter
+    string status = 2;              // Optional filter
+}

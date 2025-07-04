@@ -1,0 +1,76 @@
+syntax = "proto3";
+package services;
+
+import "model/position.proto";
+import "model/modelcommon.proto";
+
+// PositionService tracks and manages user positions in various assets.
+service PositionService {
+    // Get a user's position in a specific asset
+    rpc GetPosition(GetPositionRequest) returns (GetPositionResponse);
+
+    // List all positions for a user (their portfolio)
+    rpc ListPositions(ListPositionsRequest) returns (ListPositionsResponse);
+
+    // (Admin) List all positions for all users
+    rpc GetAllPositions(GetAllPositionsRequest) returns (GetAllPositionsResponse);
+
+    // Stream real-time position updates for a user
+    rpc SubscribePositions(SubscribePositionsRequest) returns (stream model.Position);
+
+    // Get the history of a position (for audit/compliance)
+    rpc GetPositionHistory(GetPositionHistoryRequest) returns (GetPositionHistoryResponse);
+
+    // Get aggregated portfolio stats for a user
+    rpc GetPortfolioStats(GetPortfolioStatsRequest) returns (GetPortfolioStatsResponse);
+}
+
+// --- Messages ---
+
+message GetPositionRequest {
+    string user_id = 1;
+    string token_id = 2;
+}
+
+message GetPositionResponse {
+    model.Position position = 1;
+}
+
+message ListPositionsRequest {
+    string user_id = 1;
+}
+
+message ListPositionsResponse {
+    repeated model.Position positions = 1;
+}
+
+message GetAllPositionsRequest {}
+
+message GetAllPositionsResponse {
+    repeated model.Position positions = 1;
+}
+
+message SubscribePositionsRequest {
+    string user_id = 1;
+}
+
+message GetPositionHistoryRequest {
+    string user_id = 1;
+    string token_id = 2;
+}
+
+message GetPositionHistoryResponse {
+    repeated model.Position positions = 1;
+}
+
+message GetPortfolioStatsRequest {
+    string user_id = 1;
+}
+
+message GetPortfolioStatsResponse {
+    double total_value = 1;
+    double total_unrealized_pnl = 2;
+    double margin_used = 3;
+    double margin_available = 4;
+    // Add more stats as needed
+}

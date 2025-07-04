@@ -1,0 +1,35 @@
+syntax = "proto3";
+import "modelcommon.proto";
+
+package model;
+option go_package="model";
+
+message Account {
+    string id = 1;                // Unique account ID
+    string user_id = 2;           // Owner of the account
+    string currency = 3;          // "USD", "USDT", "PROP123", etc.
+    double balance = 4;           // Total balance
+    double available = 5;         // Available for trading
+    double locked = 6;            // Locked for open orders
+    Timestamp last_updated = 7;
+}
+
+message GetBalanceRequest {
+    string user_id = 1;
+    string currency = 2;
+}
+
+message GetBalanceResponse {
+    double balance = 1;
+    double available = 2;
+    double locked = 3;
+}
+
+message Transaction {
+    string id = 1;
+    string account_id = 2;
+    string type = 3;              // "deposit", "withdrawal", "trade", etc.
+    double amount = 4;
+    string reference = 5;         // External reference or order ID
+    Timestamp timestamp = 6;
+}

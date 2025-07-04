@@ -1,0 +1,12 @@
+message Settlement {
+    string id = 1;
+    string trade_id = 2;
+    string buyer_id = 3;
+    string seller_id = 4;
+    string token_id = 5;
+    double quantity = 6;
+    double price = 7;
+    string status = 8;          // \"PENDING\", \"COMPLETED\", \"FAILED\"
+    int64 timestamp = 9;
+    string failure_reason = 10;
+}

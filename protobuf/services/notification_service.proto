@@ -1,0 +1,92 @@
+syntax = "proto3";
+package services;
+
+import "model/modelcommon.proto";
+
+service NotificationService {
+    // Send a notification to a user or group
+    rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse);
+
+    // Subscribe to real-time notifications (streaming)
+    rpc SubscribeNotifications(SubscribeNotificationsRequest) returns (stream Notification);
+
+    // Get notification history for a user
+    rpc GetNotificationHistory(GetNotificationHistoryRequest) returns (GetNotificationHistoryResponse);
+
+    // Set user notification preferences
+    rpc SetNotificationPreferences(SetNotificationPreferencesRequest) returns (SetNotificationPreferencesResponse);
+
+    // Get user notification preferences
+    rpc GetNotificationPreferences(GetNotificationPreferencesRequest) returns (GetNotificationPreferencesResponse);
+
+    // Mark a notification as read/acknowledged
+    rpc AcknowledgeNotification(AcknowledgeNotificationRequest) returns (AcknowledgeNotificationResponse);
+}
+
+// --- Messages ---
+
+message Notification {
+    string id = 1;
+    string user_id = 2;
+    string type = 3;         // "trade", "alert", "system", etc.
+    string title = 4;
+    string body = 5;
+    int64 timestamp = 6;
+    string status = 7;       // "unread", "read", "archived"
+    string channel = 8;      // "email", "push", "sms", "in-app"
+    string data = 9;         // JSON or key-value for extra info
+}
+
+message SendNotificationRequest {
+    Notification notification = 1;
+}
+
+message SendNotificationResponse {
+    string status = 1;
+}
+
+message SubscribeNotificationsRequest {
+    string user_id = 1;
+}
+
+message GetNotificationHistoryRequest {
+    string user_id = 1;
+    int32 limit = 2;
+    int32 page = 3;
+}
+
+message GetNotificationHistoryResponse {
+    repeated Notification notifications = 1;
+    int32 total_count = 2;
+}
+
+message NotificationPreference {
+    string user_id = 1;
+    repeated string enabled_channels = 2; // e.g., ["email", "push"]
+    repeated string enabled_types = 3;    // e.g., ["trade", "alert"]
+}
+
+message SetNotificationPreferencesRequest {
+    NotificationPreference preference = 1;
+}
+
+message SetNotificationPreferencesResponse {
+    string status = 1;
+}
+
+message GetNotificationPreferencesRequest {
+    string user_id = 1;
+}
+
+message GetNotificationPreferencesResponse {
+    NotificationPreference preference = 1;
+}
+
+message AcknowledgeNotificationRequest {
+    string notification_id = 1;
+    string user_id = 2;
+}
+
+message AcknowledgeNotificationResponse {
+    string status = 1;
+}
